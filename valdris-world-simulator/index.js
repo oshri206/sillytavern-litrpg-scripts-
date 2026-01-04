@@ -379,7 +379,7 @@ function hookSillyTavernEvents() {
 
 function generateTimeContext() {
     const state = timeSystem.stateManager.getSection('time');
-    return `${state.dayName}, ${ordinalSuffix(state.dayOfMonth)} of ${state.monthName}, ${state.year} AV - ${state.timeOfDay} (${padNumber(state.hour)}:${padNumber(state.minute)})`;
+    return `${state.dayName}, ${ordinalSuffix(state.dayOfMonth)} of ${state.monthName}, ${state.year} AV - ${toTitleCase(state.timeOfDay)} (${padNumber(state.hour)}:${padNumber(state.minute)})`;
 }
 
 function updateWeatherUI(panel) {
