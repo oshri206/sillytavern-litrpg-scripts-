@@ -24,9 +24,7 @@ export const DEFAULT_WORLD_STATE = {
         // Settings
         timeFlowEnabled: true,
         minutesPerMessage: 15,
-        autoAdvanceTime: true,
-        contextInjectionEnabled: true,
-        aiTimeParsingEnabled: true
+        autoAdvanceTime: true
     },
 
     // Placeholder sections for future phases (initialize empty)

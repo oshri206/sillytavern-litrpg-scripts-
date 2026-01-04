@@ -206,25 +206,3 @@
 #valdris-world-simulator-panel.season-winter {
     border-color: #4fc3f7;
 }
-
-.vws-time-toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
-    color: #e0e0e0;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: 1px solid #4a9eff;
-    box-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
-    z-index: 10000;
-    opacity: 0;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.vws-time-toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-}
