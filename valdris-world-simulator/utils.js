@@ -39,3 +39,7 @@ export function toTitleCase(value) {
     }
     return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+export function randomChoice(list) {
+    return list[Math.floor(Math.random() * list.length)];
+}

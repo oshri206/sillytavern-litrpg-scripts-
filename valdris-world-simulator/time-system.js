@@ -46,7 +46,8 @@ export class TimeSystem {
             time: [],
             day: [],
             season: [],
-            year: []
+            year: [],
+            hour: []
         };
     }
 
@@ -58,6 +59,7 @@ export class TimeSystem {
         const previousDay = current.dayOfYear;
         const previousSeason = current.season;
         const previousYear = current.year;
+        const previousHour = current.hour;
 
         let totalMinutes = current.minute + minutes;
         const hourCarry = Math.floor(totalMinutes / 60);
@@ -76,7 +78,7 @@ export class TimeSystem {
 
         this.updateComputedFields(current);
         this.stateManager.updateSection('time', current);
-        this.emitCallbacks(previousDay, previousSeason, previousYear);
+        this.emitCallbacks(previousDay, previousSeason, previousYear, previousHour);
     }
 
     advanceHours(hours) {
@@ -88,6 +90,7 @@ export class TimeSystem {
         const previousDay = current.dayOfYear;
         const previousSeason = current.season;
         const previousYear = current.year;
+        const previousHour = current.hour;
 
         const totalDays = (current.dayOfYear - 1) + days;
         const yearCarry = Math.floor(totalDays / 360);
@@ -96,7 +99,7 @@ export class TimeSystem {
 
         this.updateComputedFields(current);
         this.stateManager.updateSection('time', current);
-        this.emitCallbacks(previousDay, previousSeason, previousYear);
+        this.emitCallbacks(previousDay, previousSeason, previousYear, previousHour);
     }
 
     setTime(year, dayOfYear, hour, minute) {
@@ -104,15 +107,24 @@ export class TimeSystem {
         const previousDay = current.dayOfYear;
         const previousSeason = current.season;
         const previousYear = current.year;
+        const previousHour = current.hour;
 
-        current.year = year;
-        current.dayOfYear = dayOfYear;
-        current.hour = hour;
-        current.minute = minute;
+        if (year !== null && year !== undefined) {
+            current.year = year;
+        }
+        if (dayOfYear !== null && dayOfYear !== undefined) {
+            current.dayOfYear = dayOfYear;
+        }
+        if (hour !== null && hour !== undefined) {
+            current.hour = hour;
+        }
+        if (minute !== null && minute !== undefined) {
+            current.minute = minute;
+        }
 
         this.updateComputedFields(current);
         this.stateManager.updateSection('time', current);
-        this.emitCallbacks(previousDay, previousSeason, previousYear);
+        this.emitCallbacks(previousDay, previousSeason, previousYear, previousHour);
     }
 
     getCurrentMonth() {
@@ -193,6 +205,10 @@ export class TimeSystem {
         this.callbacks.year.push(callback);
     }
 
+    onHourChanged(callback) {
+        this.callbacks.hour.push(callback);
+    }
+
     updateComputedFields(time) {
         const monthIndex = Math.floor((time.dayOfYear - 1) / 30);
         const month = this.MONTHS[monthIndex];
@@ -213,9 +229,12 @@ export class TimeSystem {
         return match ? match.name : 'night';
     }
 
-    emitCallbacks(previousDay, previousSeason, previousYear) {
+    emitCallbacks(previousDay, previousSeason, previousYear, previousHour) {
         const time = this.stateManager.getSection('time');
         this.callbacks.time.forEach((callback) => callback(time));
+        if (previousHour !== time.hour) {
+            this.callbacks.hour.forEach((callback) => callback(time));
+        }
         if (previousDay !== time.dayOfYear) {
             this.callbacks.day.forEach((callback) => callback(time));
         }

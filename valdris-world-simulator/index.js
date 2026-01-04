@@ -8,63 +8,64 @@ const EXTENSION_TITLE = 'Valdris World Simulator';
 
 const stateManager = new StateManager();
 const timeSystem = new TimeSystem(stateManager);
-let weatherSystem = null;
+const weatherSystem = new WeatherSystem(stateManager, timeSystem);
 
 const TIME_PATTERNS = [
-    { regex: /(\\d+)\\s*hours?\\s*later/i, unit: 'hours', group: 1 },
-    { regex: /after\\s*(\\d+)\\s*hours?/i, unit: 'hours', group: 1 },
-    { regex: /(\\d+)\\s*hours?\\s*pass(?:es|ed)?/i, unit: 'hours', group: 1 },
-    { regex: /(\\d+)\\s*minutes?\\s*later/i, unit: 'minutes', group: 1 },
-    { regex: /after\\s*(\\d+)\\s*minutes?/i, unit: 'minutes', group: 1 },
-    { regex: /(\\d+)\\s*minutes?\\s*pass(?:es|ed)?/i, unit: 'minutes', group: 1 },
-    { regex: /(\\d+)\\s*days?\\s*later/i, unit: 'days', group: 1 },
-    { regex: /after\\s*(\\d+)\\s*days?/i, unit: 'days', group: 1 },
-    { regex: /(\\d+)\\s*days?\\s*pass(?:es|ed)?/i, unit: 'days', group: 1 },
-    { regex: /(\\d+)\\s*weeks?\\s*later/i, unit: 'weeks', group: 1 },
-    { regex: /after\\s*(\\d+)\\s*weeks?/i, unit: 'weeks', group: 1 },
-    { regex: /a\\s*week\\s*later/i, unit: 'weeks', value: 1 },
-    { regex: /(?:a|one)\\s*hour\\s*later/i, unit: 'hours', value: 1 },
-    { regex: /(?:a\\s*)?couple\\s*(?:of\\s*)?hours?\\s*later/i, unit: 'hours', value: 2 },
-    { regex: /(?:a\\s*)?few\\s*hours?\\s*later/i, unit: 'hours', value: 3 },
-    { regex: /several\\s*hours?\\s*later/i, unit: 'hours', value: 5 },
-    { regex: /many\\s*hours?\\s*later/i, unit: 'hours', value: 8 },
-    { regex: /(?:a|one)\\s*day\\s*later/i, unit: 'days', value: 1 },
-    { regex: /(?:a\\s*)?couple\\s*(?:of\\s*)?days?\\s*later/i, unit: 'days', value: 2 },
-    { regex: /(?:a\\s*)?few\\s*days?\\s*later/i, unit: 'days', value: 3 },
-    { regex: /several\\s*days?\\s*later/i, unit: 'days', value: 5 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?dawn(?:\\s*breaks)?/i, unit: 'setTime', hour: 6 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?morning/i, unit: 'setTime', hour: 8 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?midday/i, unit: 'setTime', hour: 12 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?noon/i, unit: 'setTime', hour: 12 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?afternoon/i, unit: 'setTime', hour: 14 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?dusk/i, unit: 'setTime', hour: 18 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?evening/i, unit: 'setTime', hour: 19 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?nightfall/i, unit: 'setTime', hour: 21 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?night/i, unit: 'setTime', hour: 21 },
-    { regex: /(?:by|at|when)\\s*(?:the\\s*)?midnight/i, unit: 'setTime', hour: 0 },
-    { regex: /(?:the\\s*)?next\\s*(?:day|morning)/i, unit: 'nextMorning' },
-    { regex: /(?:the\\s*)?following\\s*(?:day|morning)/i, unit: 'nextMorning' },
-    { regex: /(?:when\\s*)?(?:you\\s*)?(?:wake|woke)\\s*(?:up)?(?:\\s*the\\s*next\\s*(?:day|morning))?/i, unit: 'nextMorning' },
-    { regex: /that\\s*night/i, unit: 'setTime', hour: 21 },
-    { regex: /later\\s*that\\s*(?:same\\s*)?day/i, unit: 'hours', value: 4 },
-    { regex: /later\\s*that\\s*(?:same\\s*)?evening/i, unit: 'setTime', hour: 20 },
-    { regex: /two\\s*hours?\\s*later/i, unit: 'hours', value: 2 },
-    { regex: /three\\s*hours?\\s*later/i, unit: 'hours', value: 3 },
-    { regex: /four\\s*hours?\\s*later/i, unit: 'hours', value: 4 },
-    { regex: /five\\s*hours?\\s*later/i, unit: 'hours', value: 5 },
-    { regex: /six\\s*hours?\\s*later/i, unit: 'hours', value: 6 },
-    { regex: /two\\s*days?\\s*later/i, unit: 'days', value: 2 },
-    { regex: /three\\s*days?\\s*later/i, unit: 'days', value: 3 },
+    { regex: /(\d+)\s*hours?\s*later/i, unit: 'hours', group: 1 },
+    { regex: /after\s*(\d+)\s*hours?/i, unit: 'hours', group: 1 },
+    { regex: /(\d+)\s*hours?\s*pass(?:es|ed)?/i, unit: 'hours', group: 1 },
+    { regex: /(\d+)\s*minutes?\s*later/i, unit: 'minutes', group: 1 },
+    { regex: /after\s*(\d+)\s*minutes?/i, unit: 'minutes', group: 1 },
+    { regex: /(\d+)\s*minutes?\s*pass(?:es|ed)?/i, unit: 'minutes', group: 1 },
+    { regex: /(\d+)\s*days?\s*later/i, unit: 'days', group: 1 },
+    { regex: /after\s*(\d+)\s*days?/i, unit: 'days', group: 1 },
+    { regex: /(\d+)\s*days?\s*pass(?:es|ed)?/i, unit: 'days', group: 1 },
+    { regex: /(\d+)\s*weeks?\s*later/i, unit: 'weeks', group: 1 },
+    { regex: /after\s*(\d+)\s*weeks?/i, unit: 'weeks', group: 1 },
+    { regex: /a\s*week\s*later/i, unit: 'weeks', value: 1 },
+    { regex: /(?:a|one)\s*hour\s*later/i, unit: 'hours', value: 1 },
+    { regex: /(?:a\s*)?couple\s*(?:of\s*)?hours?\s*later/i, unit: 'hours', value: 2 },
+    { regex: /(?:a\s*)?few\s*hours?\s*later/i, unit: 'hours', value: 3 },
+    { regex: /several\s*hours?\s*later/i, unit: 'hours', value: 5 },
+    { regex: /many\s*hours?\s*later/i, unit: 'hours', value: 8 },
+    { regex: /(?:a|one)\s*day\s*later/i, unit: 'days', value: 1 },
+    { regex: /(?:a\s*)?couple\s*(?:of\s*)?days?\s*later/i, unit: 'days', value: 2 },
+    { regex: /(?:a\s*)?few\s*days?\s*later/i, unit: 'days', value: 3 },
+    { regex: /several\s*days?\s*later/i, unit: 'days', value: 5 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?dawn(?:\s*breaks)?/i, unit: 'setTime', hour: 6 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?morning/i, unit: 'setTime', hour: 8 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?midday/i, unit: 'setTime', hour: 12 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?noon/i, unit: 'setTime', hour: 12 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?afternoon/i, unit: 'setTime', hour: 14 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?dusk/i, unit: 'setTime', hour: 18 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?evening/i, unit: 'setTime', hour: 19 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?nightfall/i, unit: 'setTime', hour: 21 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?night/i, unit: 'setTime', hour: 21 },
+    { regex: /(?:by|at|when)\s*(?:the\s*)?midnight/i, unit: 'setTime', hour: 0 },
+    { regex: /(?:the\s*)?next\s*(?:day|morning)/i, unit: 'nextMorning' },
+    { regex: /(?:the\s*)?following\s*(?:day|morning)/i, unit: 'nextMorning' },
+    { regex: /(?:when\s*)?(?:you\s*)?(?:wake|woke)\s*(?:up)?(?:\s*the\s*next\s*(?:day|morning))?/i, unit: 'nextMorning' },
+    { regex: /that\s*night/i, unit: 'setTime', hour: 21 },
+    { regex: /later\s*that\s*(?:same\s*)?day/i, unit: 'hours', value: 4 },
+    { regex: /later\s*that\s*(?:same\s*)?evening/i, unit: 'setTime', hour: 20 },
+    { regex: /two\s*hours?\s*later/i, unit: 'hours', value: 2 },
+    { regex: /three\s*hours?\s*later/i, unit: 'hours', value: 3 },
+    { regex: /four\s*hours?\s*later/i, unit: 'hours', value: 4 },
+    { regex: /five\s*hours?\s*later/i, unit: 'hours', value: 5 },
+    { regex: /six\s*hours?\s*later/i, unit: 'hours', value: 6 },
+    { regex: /two\s*days?\s*later/i, unit: 'days', value: 2 },
+    { regex: /three\s*days?\s*later/i, unit: 'days', value: 3 },
     { regex: /overnight/i, unit: 'hours', value: 8 },
-    { regex: /through\\s*the\\s*night/i, unit: 'hours', value: 8 },
-    { regex: /all\\s*(?:through\\s*the\\s*)?night/i, unit: 'hours', value: 10 },
-    { regex: /as\\s*(?:the\\s*)?sun\\s*(?:rises|rose)/i, unit: 'setTime', hour: 6 },
-    { regex: /as\\s*(?:the\\s*)?sun\\s*(?:sets|set)/i, unit: 'setTime', hour: 18 }
+    { regex: /through\s*the\s*night/i, unit: 'hours', value: 8 },
+    { regex: /all\s*(?:through\s*the\s*)?night/i, unit: 'hours', value: 10 },
+    { regex: /as\s*(?:the\s*)?sun\s*(?:rises|rose)/i, unit: 'setTime', hour: 6 },
+    { regex: /as\s*(?:the\s*)?sun\s*(?:sets|set)/i, unit: 'setTime', hour: 18 }
 ];
 
 window.ValdrisWorldSim = {
     state: stateManager,
-    time: timeSystem
+    time: timeSystem,
+    weather: weatherSystem
 };
 
 function getCharacterId() {
@@ -274,7 +275,7 @@ function handlePanelEvents(panel) {
             }
         }
         if (action === 'randomize-weather') {
-            weatherSystem?.forceWeatherUpdate();
+            weatherSystem.forceWeatherUpdate();
         }
     });
 
@@ -315,7 +316,7 @@ function handlePanelEvents(panel) {
     panel.querySelector('[data-setting="weatherEnabled"]').addEventListener('change', (event) => {
         stateManager.updateSection('weather', { weatherEnabled: event.target.checked });
         if (event.target.checked) {
-            weatherSystem?.forceWeatherUpdate();
+            weatherSystem.forceWeatherUpdate();
         }
     });
 
@@ -344,7 +345,7 @@ function hookSillyTavernEvents() {
         if (time?.contextInjectionEnabled) {
             contextLines.push(`[Current Time: ${generateTimeContext()}]`);
         }
-        if (weather?.weatherEnabled && weather?.injectWeatherIntoPrompt && weatherSystem) {
+        if (weather?.weatherEnabled && weather?.injectWeatherIntoPrompt) {
             contextLines.push(`[Weather: ${weatherSystem.getWeatherForPrompt()}]`);
         }
         if (contextLines.length) {
@@ -373,7 +374,7 @@ function hookSillyTavernEvents() {
         const time = { ...stateManager.getSection('time') };
         timeSystem.updateComputedFields(time);
         stateManager.updateSection('time', time);
-        weatherSystem?.refreshState();
+        weatherSystem.refreshState();
     });
 }
 
@@ -383,9 +384,6 @@ function generateTimeContext() {
 }
 
 function updateWeatherUI(panel) {
-    if (!weatherSystem) {
-        return;
-    }
     const weatherState = weatherSystem.getCurrentWeather();
     if (!weatherState) {
         return;
@@ -504,9 +502,7 @@ async function initialize() {
     timeSystem.updateComputedFields(time);
     stateManager.updateSection('time', time);
 
-    weatherSystem = new WeatherSystem(stateManager, timeSystem);
     weatherSystem.initialize();
-    window.ValdrisWorldSim.weather = weatherSystem;
 
     const panel = attachPanel();
     handlePanelEvents(panel);
@@ -515,7 +511,7 @@ async function initialize() {
     stateManager.on('stateUpdated', () => updatePanel(panel));
     stateManager.on('sectionUpdated', () => updatePanel(panel));
     stateManager.on('stateReset', () => {
-        weatherSystem?.refreshState();
+        weatherSystem.refreshState();
         updatePanel(panel);
     });
     weatherSystem.onWeatherChanged(() => updatePanel(panel));

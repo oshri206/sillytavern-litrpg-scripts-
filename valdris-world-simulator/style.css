@@ -191,6 +191,22 @@
     gap: 8px;
 }
 
+#valdris-world-simulator-panel.season-spring {
+    border-color: #7cb342;
+}
+
+#valdris-world-simulator-panel.season-summer {
+    border-color: #ffa726;
+}
+
+#valdris-world-simulator-panel.season-autumn {
+    border-color: #bf360c;
+}
+
+#valdris-world-simulator-panel.season-winter {
+    border-color: #4fc3f7;
+}
+
 .vws-weather-display {
     margin-top: 10px;
     padding: 10px;
@@ -264,22 +280,6 @@
 .vws-extreme-event-banner .event-duration {
     font-size: 11px;
     opacity: 0.8;
-}
-
-#valdris-world-simulator-panel.season-spring {
-    border-color: #7cb342;
-}
-
-#valdris-world-simulator-panel.season-summer {
-    border-color: #ffa726;
-}
-
-#valdris-world-simulator-panel.season-autumn {
-    border-color: #bf360c;
-}
-
-#valdris-world-simulator-panel.season-winter {
-    border-color: #4fc3f7;
 }
 
 .vws-time-toast {

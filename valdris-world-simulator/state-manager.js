@@ -1,18 +1,13 @@
 import { debounce } from './utils.js';
 
 export const DEFAULT_WORLD_STATE = {
-    // Meta
     version: '1.0.0',
     lastUpdated: null,
-
-    // Time System (Phase 1)
     time: {
         year: 2847,
         dayOfYear: 1,
         hour: 8,
         minute: 0,
-
-        // Cached/computed (update when time changes)
         month: 1,
         dayOfMonth: 1,
         dayOfWeek: 1,
@@ -20,16 +15,12 @@ export const DEFAULT_WORLD_STATE = {
         timeOfDay: 'morning',
         monthName: 'Firstlight',
         dayName: 'Solday',
-
-        // Settings
         timeFlowEnabled: true,
         minutesPerMessage: 15,
         autoAdvanceTime: true,
         contextInjectionEnabled: true,
         aiTimeParsingEnabled: true
     },
-
-    // Weather System (Phase 2)
     weather: {
         current: {
             type: 'clear',
@@ -52,7 +43,6 @@ export const DEFAULT_WORLD_STATE = {
         injectWeatherIntoPrompt: true,
         extremeEventsEnabled: true
     },
-    // Placeholder sections for future phases (initialize empty)
     factions: {},
     events: {},
     rumors: {},

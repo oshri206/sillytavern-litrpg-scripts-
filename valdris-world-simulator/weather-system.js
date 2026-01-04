@@ -302,6 +302,7 @@ export class WeatherSystem {
         if (!this.initialized) {
             this.timeSystem.onTimeAdvanced(() => this.checkWeatherUpdate());
             this.timeSystem.onSeasonChanged(() => this.forceWeatherUpdate());
+            this.timeSystem.onHourChanged(() => this.checkWeatherUpdate());
             this.initialized = true;
         }
     }
@@ -648,5 +649,4 @@ export class WeatherSystem {
         this.timeSystem.updateComputedFields(tempTime);
         return `${tempTime.dayName}, ${ordinalSuffix(tempTime.dayOfMonth)} of ${tempTime.monthName}, ${tempTime.year} AV - ${padNumber(tempTime.hour)}:00`;
     }
-
 }
